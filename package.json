@@ -1,8 +1,7 @@
 {
   "name": "trie-dictionary",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Trie implemented dictionary",
-  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -20,7 +19,7 @@
     "algorithms"
   ],
   "author": "Vipul Goel",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/vipulgoel30/trie-dictionary.git"
   },

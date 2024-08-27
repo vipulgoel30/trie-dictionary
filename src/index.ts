@@ -12,7 +12,10 @@ export interface TraverseOutputItem<Type> {
   data?: Type;
 }
 
+
+
 export interface TraverseOutput<Type> extends Array<TraverseOutputItem<Type>> {}
+export type CompleteOutput<Type> = TraverseOutput<Type>;
 
 /**
  * Class representing a node in the Trie.
@@ -153,6 +156,44 @@ class Trie<Type> {
   find(key: string): FindOutput<Type> {
     return this.#find(key, 0, this.root);
   }
+
+  /**
+   * Get autocomplete suggestions based on a given prefix.
+   * @param key - The prefix to search for autocomplete suggestions.
+   * @returns An array of autocomplete suggestions, where each suggestion includes the key (word) and its associated data.
+   */
+  complete(prefix: string): CompleteOutput<Type> {
+    let root: TrieNode<Type> | undefined = this.root;
+    let index = 0;
+
+    while (root && index++ < prefix.length) {
+      root = root.childs?.[prefix[index]];
+    }
+
+    const suggestions: CompleteOutput<Type> = [];
+
+    // If the prefix exists in the Trie, gather autocomplete suggestions
+    if (root) {
+      type QueueElement = [TrieNode<Type>, string];
+      const queue: Array<QueueElement> = [[root, prefix]];
+
+      while (queue.length) {
+        const [currentRoot, prefix]: QueueElement = queue.shift()!;
+
+        // If the current node marks the end of a word, add it to suggestions
+        if (currentRoot.isWord) {
+          suggestions.push({ key: prefix, data: currentRoot.data });
+        }
+
+        // Enqueue all children nodes for further exploration
+        for (const [char, childNode] of Object.entries(currentRoot.childs)) {
+          queue.push([childNode, prefix + char]);
+        }
+      }
+    }
+
+    return suggestions;
+  }
 }
 
 /**
@@ -163,3 +204,4 @@ class Trie<Type> {
 export default function initTrie<Type>(options: TrieInitOptions): Trie<Type> {
   return new Trie<Type>(options.isAppend);
 }
+

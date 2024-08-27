@@ -1,6 +1,6 @@
 {
   "name": "trie-dictionary",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Trie implemented dictionary",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
